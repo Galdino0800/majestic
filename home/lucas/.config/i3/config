@@ -223,15 +223,19 @@ assign [class="^Mate-disk-usage-analyzer"] $workspace10
 #assign [class="^Pamac-manager"] $workspace10
 assign [class="(^Pamac*|Notes|Lxtask)"] $workspace10
 
-bindsym $mod+Mod1+e mode "[s]air, [d]esligar, [r]einiciar, [s]uspender" {
-	bindsym s exec i3-msg exit
-	bindsym d exec systemctl poweroff
-	bindsym r exec systemctl reboot
-	bindsym s exec systemctl suspend
+set $mode_system System >>> (L)ogout   | (S)uspender   | (R)einiciar   | (D)esligar  
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id $Locker && systemctl suspend, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym d exec --no-startup-id systemctl poweroff -i, mode "default"
 
-	bindsym Return mode "default"
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
     bindsym Escape mode "default"
 }
+bindsym $mod+Mod1+e mode "$mode_system"
+
 
 mode "resize" {
         bindsym j resize shrink width 10 px or 10 ppt
